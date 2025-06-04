@@ -7,54 +7,7 @@ import (
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
-func (c *realClient) CreateTeam(id string, name string, description string) error {
-	body := map[string]interface{}{
-		"operationName": "createTeam",
-		"query":         "query createTeam($teamId: ID!, $teamName: String, $description: String) {\n  team: createTeam(\n    teamId: $teamId\n    teamName: $teamName\n    description: $description\n  ) {\n    ...AdminTeamInfo\n  }\n}\n    \n    fragment AdminTeamInfo on AdminTeamInfo {\n  teamId\n  teamName\n  description\n  teamPermissions\n}",
-		"variables": map[string]interface{}{
-			"teamId":            id,
-			"teamName":          name,
-			"description":       description,
-			"customIncludeBase": false,
-		},
-	}
-	var responseBody interface{}
-	_, err := sendPost(fmt.Sprintf("%s/api/gql", c.endpoint), body, map[string]string{"cb-session-id": c.sessionId}, &responseBody)
-	return err
-}
-
-func (c *realClient) CreateTeamEntraGroup(id string, groupId string) error {
-	body := map[string]interface{}{
-		"operationName": "saveTeamMetaParameters",
-		"query":         "query saveTeamMetaParameters($teamId: ID!, $parameters: Object!) {\n setTeamMetaParameterValues(teamId: $teamId, parameters: $parameters)\n}",
-		"variables": map[string]interface{}{
-			"teamId": id,
-			"parameters": map[string]string{
-				"aad.group-id": groupId,
-			},
-		},
-	}
-	var responseBody interface{}
-	_, err := sendPost(fmt.Sprintf("%s/api/gql", c.endpoint), body, map[string]string{"cb-session-id": c.sessionId}, &responseBody)
-	return err
-}
-
-func (c *realClient) DeleteTeam(id string) error {
-	body := map[string]interface{}{
-		"operationName": "deleteTeam",
-		"query":         "query deleteTeam($teamId: ID!, $force: Boolean) {\n  deleteTeam(teamId: $teamId, force: $force)\n}",
-		"variables": map[string]interface{}{
-			"teamId": id,
-			"force":  true,
-		},
-	}
-	var responseBody interface{}
-	_, err := sendPost(fmt.Sprintf("%s/api/gql", c.endpoint), body, map[string]string{"cb-session-id": c.sessionId}, &responseBody)
-	return err
-}
-
 type Team struct {
-	getClient clientFactory
 }
 
 type TeamArgs struct {
@@ -67,25 +20,39 @@ type TeamState struct {
 }
 
 func (w *Team) Create(ctx context.Context, req infer.CreateRequest[TeamArgs]) (infer.CreateResponse[TeamState], error) {
-	config := infer.GetConfig[Config](ctx)
-
 	id := fmt.Sprintf("t_%s", req.Inputs.Name)
 	state := TeamState{TeamArgs: req.Inputs}
 
-	// Use the client factory to create a client based on the current config.
-	client, err := w.getClient(ctx, config)
-	if err != nil {
-		return infer.CreateResponse[TeamState]{}, err
-	}
+	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
-	// Use the client to create a team.
-	err = client.CreateTeam(id, req.Inputs.Name, req.Inputs.Description)
+	body := map[string]interface{}{
+		"operationName": "createTeam",
+		"query":         "query createTeam($teamId: ID!, $teamName: String, $description: String) { team: createTeam(teamId: $teamId, teamName: $teamName, description: $description) { teamId }}",
+		"variables": map[string]interface{}{
+			"teamId":      id,
+			"teamName":    req.Inputs.Name,
+			"description": req.Inputs.Description,
+		},
+	}
+	var responseBody interface{}
+	_, err := sendPost(fmt.Sprintf("%s/api/gql", config.Endpoint), body, map[string]string{"cb-session-id": config.SessionId}, &responseBody)
 	if err != nil {
 		return infer.CreateResponse[TeamState]{}, err
 	}
 
 	if req.Inputs.EntraGroupId != nil {
-		err = client.CreateTeamEntraGroup(id, *req.Inputs.EntraGroupId)
+		body := map[string]interface{}{
+			"operationName": "setTeamMetaParameterValues",
+			"query":         "query setTeamMetaParameterValues($teamId: ID!, $parameters: Object!) { setTeamMetaParameterValues(teamId: $teamId, parameters: $parameters) }",
+			"variables": map[string]interface{}{
+				"teamId": id,
+				"parameters": map[string]string{
+					"aad.group-id": *req.Inputs.EntraGroupId,
+				},
+			},
+		}
+		var responseBody interface{}
+		_, err = sendPost(fmt.Sprintf("%s/api/gql", config.Endpoint), body, map[string]string{"cb-session-id": config.SessionId}, &responseBody)
 		if err != nil {
 			return infer.CreateResponse[TeamState]{
 				ID:     id,
@@ -122,16 +89,18 @@ func (w *Team) Create(ctx context.Context, req infer.CreateRequest[TeamArgs]) (i
 // }
 
 func (w *Team) Delete(ctx context.Context, req infer.DeleteRequest[TeamState]) (infer.DeleteResponse, error) {
-	config := infer.GetConfig[Config](ctx)
+	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
-	// Use the client factory to create a client based on the current config.
-	client, err := w.getClient(ctx, config)
-	if err != nil {
-		return infer.DeleteResponse{}, err
+	body := map[string]interface{}{
+		"operationName": "deleteTeam",
+		"query":         "query deleteTeam($teamId: ID!, $force: Boolean) { deleteTeam(teamId: $teamId, force: $force) }",
+		"variables": map[string]interface{}{
+			"teamId": req.ID,
+			"force":  true,
+		},
 	}
-
-	// Use the client to delete a team.
-	err = client.DeleteTeam(req.ID)
+	var responseBody interface{}
+	_, err := sendPost(fmt.Sprintf("%s/api/gql", config.Endpoint), body, map[string]string{"cb-session-id": config.SessionId}, &responseBody)
 	if err != nil {
 		return infer.DeleteResponse{}, err
 	}

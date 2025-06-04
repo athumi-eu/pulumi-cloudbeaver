@@ -34,7 +34,7 @@ func sendPost(endpoint string, body map[string]interface{}, cookies map[string]s
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Did not get a 200 response")
+		return nil, fmt.Errorf("did not get a 200 response")
 	}
 
 	json.NewDecoder(resp.Body).Decode(&bodyDest)

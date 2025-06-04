@@ -32,6 +32,16 @@ namespace Pulumi.Cloudbeaver
 
         private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("cloudbeaver");
 
+        private static readonly __Value<string?> _apiKey = new __Value<string?>(() => __config.Get("apiKey"));
+        /// <summary>
+        /// The cloudbeaver API key to use.
+        /// </summary>
+        public static string? ApiKey
+        {
+            get => _apiKey.Get();
+            set => _apiKey.Set(value);
+        }
+
         private static readonly __Value<string?> _endpoint = new __Value<string?>(() => __config.Get("endpoint"));
         /// <summary>
         /// The cloudbeaver endpoint to connect to.
@@ -40,26 +50,6 @@ namespace Pulumi.Cloudbeaver
         {
             get => _endpoint.Get();
             set => _endpoint.Set(value);
-        }
-
-        private static readonly __Value<string?> _password = new __Value<string?>(() => __config.Get("password"));
-        /// <summary>
-        /// The cloudbeaver password to use.
-        /// </summary>
-        public static string? Password
-        {
-            get => _password.Get();
-            set => _password.Set(value);
-        }
-
-        private static readonly __Value<string?> _username = new __Value<string?>(() => __config.Get("username"));
-        /// <summary>
-        /// The cloudbeaver username to use.
-        /// </summary>
-        public static string? Username
-        {
-            get => _username.Get();
-            set => _username.Set(value);
         }
 
     }

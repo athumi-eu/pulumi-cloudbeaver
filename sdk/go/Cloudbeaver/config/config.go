@@ -11,17 +11,12 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
+// The cloudbeaver API key to use.
+func GetApiKey(ctx *pulumi.Context) string {
+	return config.Get(ctx, "cloudbeaver:apiKey")
+}
+
 // The cloudbeaver endpoint to connect to.
 func GetEndpoint(ctx *pulumi.Context) string {
 	return config.Get(ctx, "cloudbeaver:endpoint")
-}
-
-// The cloudbeaver password to use.
-func GetPassword(ctx *pulumi.Context) string {
-	return config.Get(ctx, "cloudbeaver:password")
-}
-
-// The cloudbeaver username to use.
-func GetUsername(ctx *pulumi.Context) string {
-	return config.Get(ctx, "cloudbeaver:username")
 }

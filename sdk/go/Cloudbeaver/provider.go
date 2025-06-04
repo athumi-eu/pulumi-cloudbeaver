@@ -15,12 +15,10 @@ import (
 type Provider struct {
 	pulumi.ProviderResourceState
 
+	// The cloudbeaver API key to use.
+	ApiKey pulumi.StringOutput `pulumi:"apiKey"`
 	// The cloudbeaver endpoint to connect to.
 	Endpoint pulumi.StringOutput `pulumi:"endpoint"`
-	// The cloudbeaver password to use.
-	Password pulumi.StringOutput `pulumi:"password"`
-	// The cloudbeaver username to use.
-	Username pulumi.StringOutput `pulumi:"username"`
 }
 
 // NewProvider registers a new resource with the given unique name, arguments, and options.
@@ -30,20 +28,17 @@ func NewProvider(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
+	if args.ApiKey == nil {
+		return nil, errors.New("invalid value for required argument 'ApiKey'")
+	}
 	if args.Endpoint == nil {
 		return nil, errors.New("invalid value for required argument 'Endpoint'")
 	}
-	if args.Password == nil {
-		return nil, errors.New("invalid value for required argument 'Password'")
-	}
-	if args.Username == nil {
-		return nil, errors.New("invalid value for required argument 'Username'")
-	}
-	if args.Password != nil {
-		args.Password = pulumi.ToSecret(args.Password).(pulumi.StringInput)
+	if args.ApiKey != nil {
+		args.ApiKey = pulumi.ToSecret(args.ApiKey).(pulumi.StringInput)
 	}
 	secrets := pulumi.AdditionalSecretOutputs([]string{
-		"password",
+		"apiKey",
 	})
 	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
@@ -56,22 +51,18 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
+	// The cloudbeaver API key to use.
+	ApiKey string `pulumi:"apiKey"`
 	// The cloudbeaver endpoint to connect to.
 	Endpoint string `pulumi:"endpoint"`
-	// The cloudbeaver password to use.
-	Password string `pulumi:"password"`
-	// The cloudbeaver username to use.
-	Username string `pulumi:"username"`
 }
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
+	// The cloudbeaver API key to use.
+	ApiKey pulumi.StringInput
 	// The cloudbeaver endpoint to connect to.
 	Endpoint pulumi.StringInput
-	// The cloudbeaver password to use.
-	Password pulumi.StringInput
-	// The cloudbeaver username to use.
-	Username pulumi.StringInput
 }
 
 func (ProviderArgs) ElementType() reflect.Type {
@@ -111,19 +102,14 @@ func (o ProviderOutput) ToProviderOutputWithContext(ctx context.Context) Provide
 	return o
 }
 
+// The cloudbeaver API key to use.
+func (o ProviderOutput) ApiKey() pulumi.StringOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.ApiKey }).(pulumi.StringOutput)
+}
+
 // The cloudbeaver endpoint to connect to.
 func (o ProviderOutput) Endpoint() pulumi.StringOutput {
 	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Endpoint }).(pulumi.StringOutput)
-}
-
-// The cloudbeaver password to use.
-func (o ProviderOutput) Password() pulumi.StringOutput {
-	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Password }).(pulumi.StringOutput)
-}
-
-// The cloudbeaver username to use.
-func (o ProviderOutput) Username() pulumi.StringOutput {
-	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Username }).(pulumi.StringOutput)
 }
 
 func init() {

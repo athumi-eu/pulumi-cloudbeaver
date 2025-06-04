@@ -15,6 +15,21 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
     public static final ProviderArgs Empty = new ProviderArgs();
 
     /**
+     * The cloudbeaver API key to use.
+     * 
+     */
+    @Import(name="apiKey", required=true)
+    private Output<String> apiKey;
+
+    /**
+     * @return The cloudbeaver API key to use.
+     * 
+     */
+    public Output<String> apiKey() {
+        return this.apiKey;
+    }
+
+    /**
      * The cloudbeaver endpoint to connect to.
      * 
      */
@@ -29,42 +44,11 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
         return this.endpoint;
     }
 
-    /**
-     * The cloudbeaver password to use.
-     * 
-     */
-    @Import(name="password", required=true)
-    private Output<String> password;
-
-    /**
-     * @return The cloudbeaver password to use.
-     * 
-     */
-    public Output<String> password() {
-        return this.password;
-    }
-
-    /**
-     * The cloudbeaver username to use.
-     * 
-     */
-    @Import(name="username", required=true)
-    private Output<String> username;
-
-    /**
-     * @return The cloudbeaver username to use.
-     * 
-     */
-    public Output<String> username() {
-        return this.username;
-    }
-
     private ProviderArgs() {}
 
     private ProviderArgs(ProviderArgs $) {
+        this.apiKey = $.apiKey;
         this.endpoint = $.endpoint;
-        this.password = $.password;
-        this.username = $.username;
     }
 
     public static Builder builder() {
@@ -83,6 +67,27 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
 
         public Builder(ProviderArgs defaults) {
             $ = new ProviderArgs(Objects.requireNonNull(defaults));
+        }
+
+        /**
+         * @param apiKey The cloudbeaver API key to use.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder apiKey(Output<String> apiKey) {
+            $.apiKey = apiKey;
+            return this;
+        }
+
+        /**
+         * @param apiKey The cloudbeaver API key to use.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder apiKey(String apiKey) {
+            return apiKey(Output.of(apiKey));
         }
 
         /**
@@ -106,57 +111,12 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
             return endpoint(Output.of(endpoint));
         }
 
-        /**
-         * @param password The cloudbeaver password to use.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder password(Output<String> password) {
-            $.password = password;
-            return this;
-        }
-
-        /**
-         * @param password The cloudbeaver password to use.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder password(String password) {
-            return password(Output.of(password));
-        }
-
-        /**
-         * @param username The cloudbeaver username to use.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder username(Output<String> username) {
-            $.username = username;
-            return this;
-        }
-
-        /**
-         * @param username The cloudbeaver username to use.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder username(String username) {
-            return username(Output.of(username));
-        }
-
         public ProviderArgs build() {
+            if ($.apiKey == null) {
+                throw new MissingRequiredPropertyException("ProviderArgs", "apiKey");
+            }
             if ($.endpoint == null) {
                 throw new MissingRequiredPropertyException("ProviderArgs", "endpoint");
-            }
-            if ($.password == null) {
-                throw new MissingRequiredPropertyException("ProviderArgs", "password");
-            }
-            if ($.username == null) {
-                throw new MissingRequiredPropertyException("ProviderArgs", "username");
             }
             return $;
         }

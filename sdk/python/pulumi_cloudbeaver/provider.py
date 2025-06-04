@@ -19,18 +19,27 @@ __all__ = ['ProviderArgs', 'Provider']
 @pulumi.input_type
 class ProviderArgs:
     def __init__(__self__, *,
-                 endpoint: pulumi.Input[str],
-                 password: pulumi.Input[str],
-                 username: pulumi.Input[str]):
+                 api_key: pulumi.Input[str],
+                 endpoint: pulumi.Input[str]):
         """
         The set of arguments for constructing a Provider resource.
+        :param pulumi.Input[str] api_key: The cloudbeaver API key to use.
         :param pulumi.Input[str] endpoint: The cloudbeaver endpoint to connect to.
-        :param pulumi.Input[str] password: The cloudbeaver password to use.
-        :param pulumi.Input[str] username: The cloudbeaver username to use.
         """
+        pulumi.set(__self__, "api_key", api_key)
         pulumi.set(__self__, "endpoint", endpoint)
-        pulumi.set(__self__, "password", password)
-        pulumi.set(__self__, "username", username)
+
+    @property
+    @pulumi.getter(name="apiKey")
+    def api_key(self) -> pulumi.Input[str]:
+        """
+        The cloudbeaver API key to use.
+        """
+        return pulumi.get(self, "api_key")
+
+    @api_key.setter
+    def api_key(self, value: pulumi.Input[str]):
+        pulumi.set(self, "api_key", value)
 
     @property
     @pulumi.getter
@@ -44,47 +53,21 @@ class ProviderArgs:
     def endpoint(self, value: pulumi.Input[str]):
         pulumi.set(self, "endpoint", value)
 
-    @property
-    @pulumi.getter
-    def password(self) -> pulumi.Input[str]:
-        """
-        The cloudbeaver password to use.
-        """
-        return pulumi.get(self, "password")
-
-    @password.setter
-    def password(self, value: pulumi.Input[str]):
-        pulumi.set(self, "password", value)
-
-    @property
-    @pulumi.getter
-    def username(self) -> pulumi.Input[str]:
-        """
-        The cloudbeaver username to use.
-        """
-        return pulumi.get(self, "username")
-
-    @username.setter
-    def username(self, value: pulumi.Input[str]):
-        pulumi.set(self, "username", value)
-
 
 class Provider(pulumi.ProviderResource):
     @overload
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 api_key: Optional[pulumi.Input[str]] = None,
                  endpoint: Optional[pulumi.Input[str]] = None,
-                 password: Optional[pulumi.Input[str]] = None,
-                 username: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
         Create a Cloudbeaver resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[str] api_key: The cloudbeaver API key to use.
         :param pulumi.Input[str] endpoint: The cloudbeaver endpoint to connect to.
-        :param pulumi.Input[str] password: The cloudbeaver password to use.
-        :param pulumi.Input[str] username: The cloudbeaver username to use.
         """
         ...
     @overload
@@ -109,9 +92,8 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 api_key: Optional[pulumi.Input[str]] = None,
                  endpoint: Optional[pulumi.Input[str]] = None,
-                 password: Optional[pulumi.Input[str]] = None,
-                 username: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -121,16 +103,13 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
+            if api_key is None and not opts.urn:
+                raise TypeError("Missing required property 'api_key'")
+            __props__.__dict__["api_key"] = None if api_key is None else pulumi.Output.secret(api_key)
             if endpoint is None and not opts.urn:
                 raise TypeError("Missing required property 'endpoint'")
             __props__.__dict__["endpoint"] = endpoint
-            if password is None and not opts.urn:
-                raise TypeError("Missing required property 'password'")
-            __props__.__dict__["password"] = None if password is None else pulumi.Output.secret(password)
-            if username is None and not opts.urn:
-                raise TypeError("Missing required property 'username'")
-            __props__.__dict__["username"] = username
-        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["password"])
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["apiKey"])
         opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Provider, __self__).__init__(
             'cloudbeaver',
@@ -139,26 +118,18 @@ class Provider(pulumi.ProviderResource):
             opts)
 
     @property
+    @pulumi.getter(name="apiKey")
+    def api_key(self) -> pulumi.Output[str]:
+        """
+        The cloudbeaver API key to use.
+        """
+        return pulumi.get(self, "api_key")
+
+    @property
     @pulumi.getter
     def endpoint(self) -> pulumi.Output[str]:
         """
         The cloudbeaver endpoint to connect to.
         """
         return pulumi.get(self, "endpoint")
-
-    @property
-    @pulumi.getter
-    def password(self) -> pulumi.Output[str]:
-        """
-        The cloudbeaver password to use.
-        """
-        return pulumi.get(self, "password")
-
-    @property
-    @pulumi.getter
-    def username(self) -> pulumi.Output[str]:
-        """
-        The cloudbeaver username to use.
-        """
-        return pulumi.get(self, "username")
 

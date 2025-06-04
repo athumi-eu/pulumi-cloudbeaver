@@ -10,24 +10,17 @@ public final class Config {
 
     private static final com.pulumi.Config config = com.pulumi.Config.of("cloudbeaver");
 /**
+ * The cloudbeaver API key to use.
+ * 
+ */
+    public String apiKey() {
+        return Codegen.stringProp("apiKey").config(config).require();
+    }
+/**
  * The cloudbeaver endpoint to connect to.
  * 
  */
     public String endpoint() {
         return Codegen.stringProp("endpoint").config(config).require();
-    }
-/**
- * The cloudbeaver password to use.
- * 
- */
-    public String password() {
-        return Codegen.stringProp("password").config(config).require();
-    }
-/**
- * The cloudbeaver username to use.
- * 
- */
-    public String username() {
-        return Codegen.stringProp("username").config(config).require();
     }
 }

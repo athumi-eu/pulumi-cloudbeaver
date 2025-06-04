@@ -14,18 +14,13 @@ else:
     from typing_extensions import NotRequired, TypedDict, TypeAlias
 from .. import _utilities
 
+apiKey: Optional[str]
+"""
+The cloudbeaver API key to use.
+"""
+
 endpoint: Optional[str]
 """
 The cloudbeaver endpoint to connect to.
-"""
-
-password: Optional[str]
-"""
-The cloudbeaver password to use.
-"""
-
-username: Optional[str]
-"""
-The cloudbeaver username to use.
 """
 

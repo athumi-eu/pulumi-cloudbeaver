@@ -16,6 +16,20 @@ import javax.annotation.Nullable;
 @ResourceType(type="pulumi:providers:cloudbeaver")
 public class Provider extends com.pulumi.resources.ProviderResource {
     /**
+     * The cloudbeaver API key to use.
+     * 
+     */
+    @Export(name="apiKey", refs={String.class}, tree="[0]")
+    private Output<String> apiKey;
+
+    /**
+     * @return The cloudbeaver API key to use.
+     * 
+     */
+    public Output<String> apiKey() {
+        return this.apiKey;
+    }
+    /**
      * The cloudbeaver endpoint to connect to.
      * 
      */
@@ -28,34 +42,6 @@ public class Provider extends com.pulumi.resources.ProviderResource {
      */
     public Output<String> endpoint() {
         return this.endpoint;
-    }
-    /**
-     * The cloudbeaver password to use.
-     * 
-     */
-    @Export(name="password", refs={String.class}, tree="[0]")
-    private Output<String> password;
-
-    /**
-     * @return The cloudbeaver password to use.
-     * 
-     */
-    public Output<String> password() {
-        return this.password;
-    }
-    /**
-     * The cloudbeaver username to use.
-     * 
-     */
-    @Export(name="username", refs={String.class}, tree="[0]")
-    private Output<String> username;
-
-    /**
-     * @return The cloudbeaver username to use.
-     * 
-     */
-    public Output<String> username() {
-        return this.username;
     }
 
     /**
@@ -95,7 +81,7 @@ public class Provider extends com.pulumi.resources.ProviderResource {
             .version(Utilities.getVersion())
             .pluginDownloadURL("github://api.github.com/athumi-eu")
             .additionalSecretOutputs(List.of(
-                "password"
+                "apiKey"
             ))
             .build();
         return com.pulumi.resources.CustomResourceOptions.merge(defaultOptions, options, id);

@@ -7,42 +7,7 @@ import (
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
-func (c *realClient) CreateDatabaseConnectionSecret(databaseConnectionId string, projectId string, teamId string, entraGroupName string) error {
-	body := map[string]interface{}{
-		"operationName": "setConnectionSecret",
-		"query":         "mutation setConnectionSecret($teamId: ID!, $projectId: ID!, $dataSourceId: ID!, $credentials: Object) {\n secret: secretSetToTeam(\n teamId: $teamId\n projectId: $projectId\n dataSourceId: $dataSourceId\n credentials: $credentials\n ) {\n subjectId\n authProperties {\n ...UserConnectionAuthProperties\n }\n }\n}\n \n fragment UserConnectionAuthProperties on ObjectPropertyInfo {\n id\n displayName\n description\n category\n dataType\n value\n validValues\n defaultValue\n length\n features\n required\n order\n conditions {\n ...Condition\n }\n}\n \n fragment Condition on Condition {\n expression\n conditionType\n}",
-		"variables": map[string]interface{}{
-			"dataSourceId": databaseConnectionId,
-			"projectId":    projectId,
-			"teamId":       teamId,
-			"credentials": map[string]string{
-				"azureGroupName": entraGroupName,
-			},
-		},
-	}
-	var responseBody interface{}
-	_, err := sendPost(fmt.Sprintf("%s/api/gql", c.endpoint), body, map[string]string{"cb-session-id": c.sessionId}, &responseBody)
-	return err
-}
-
-func (c *realClient) DeleteDatabaseConnectionSecret(databaseConnectionId string, projectId string, teamId string) error {
-	body := map[string]interface{}{
-		"operationName": "deleteConnectionSecret",
-		"query":         "mutation deleteConnectionSecret($teamId: ID!, $projectId: ID!, $dataSourceId: ID!) {\n secretDeleteFromTeam(\n teamId: $teamId\n projectId: $projectId\n dataSourceId: $dataSourceId\n )\n}",
-		"variables": map[string]interface{}{
-			"dataSourceId": databaseConnectionId,
-			"projectId":    projectId,
-			"teamId":       teamId,
-		},
-	}
-	var responseBody interface{}
-	_, err := sendPost(fmt.Sprintf("%s/api/gql", c.endpoint), body, map[string]string{"cb-session-id": c.sessionId}, &responseBody)
-	return err
-}
-
-type DatabaseConnectionSecret struct {
-	getClient clientFactory
-}
+type DatabaseConnectionSecret struct{}
 
 type DatabaseConnectionSecretArgs struct {
 	DatabaseConnectionId string `pulumi:"database_connection_id"`
@@ -55,18 +20,24 @@ type DatabaseConnectionSecretState struct {
 }
 
 func (w *DatabaseConnectionSecret) Create(ctx context.Context, req infer.CreateRequest[DatabaseConnectionSecretArgs]) (infer.CreateResponse[DatabaseConnectionSecretState], error) {
-	config := infer.GetConfig[Config](ctx)
-
 	state := DatabaseConnectionSecretState{DatabaseConnectionSecretArgs: req.Inputs}
 
-	// Use the client factory to create a client based on the current config.
-	client, err := w.getClient(ctx, config)
-	if err != nil {
-		return infer.CreateResponse[DatabaseConnectionSecretState]{}, err
-	}
+	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
-	// Use the client to create a project.
-	err = client.CreateDatabaseConnectionSecret(req.Inputs.DatabaseConnectionId, req.Inputs.ProjectId, req.Inputs.TeamId, req.Inputs.EntraGroupName)
+	body := map[string]interface{}{
+		"operationName": "secretSetToTeam",
+		"query":         "mutation secretSetToTeam($teamId: ID!, $projectId: ID!, $dataSourceId: ID!, $credentials: Object) { secretSetToTeam(teamId: $teamId, projectId: $projectId, dataSourceId: $dataSourceId, credentials: $credentials) { subjectId } }",
+		"variables": map[string]interface{}{
+			"dataSourceId": req.Inputs.DatabaseConnectionId,
+			"projectId":    req.Inputs.ProjectId,
+			"teamId":       req.Inputs.TeamId,
+			"credentials": map[string]string{
+				"azureGroupName": req.Inputs.EntraGroupName,
+			},
+		},
+	}
+	var responseBody interface{}
+	_, err := sendPost(fmt.Sprintf("%s/api/gql", config.Endpoint), body, map[string]string{"cb-session-id": config.SessionId}, &responseBody)
 	if err != nil {
 		return infer.CreateResponse[DatabaseConnectionSecretState]{}, err
 	}
@@ -99,16 +70,19 @@ func (w *DatabaseConnectionSecret) Create(ctx context.Context, req infer.CreateR
 // }
 
 func (w *DatabaseConnectionSecret) Delete(ctx context.Context, req infer.DeleteRequest[DatabaseConnectionSecretState]) (infer.DeleteResponse, error) {
-	config := infer.GetConfig[Config](ctx)
+	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
-	// Use the client factory to create a client based on the current config.
-	client, err := w.getClient(ctx, config)
-	if err != nil {
-		return infer.DeleteResponse{}, err
+	body := map[string]interface{}{
+		"operationName": "secretDeleteFromTeam",
+		"query":         "mutation secretDeleteFromTeam($teamId: ID!, $projectId: ID!, $dataSourceId: ID!) { secretDeleteFromTeam(teamId: $teamId, projectId: $projectId, dataSourceId: $dataSourceId) }",
+		"variables": map[string]interface{}{
+			"dataSourceId": req.State.DatabaseConnectionId,
+			"projectId":    req.State.ProjectId,
+			"teamId":       req.State.TeamId,
+		},
 	}
-
-	// Use the client to delete a project.
-	err = client.DeleteDatabaseConnectionSecret(req.State.DatabaseConnectionId, req.State.ProjectId, req.State.TeamId)
+	var responseBody interface{}
+	_, err := sendPost(fmt.Sprintf("%s/api/gql", config.Endpoint), body, map[string]string{"cb-session-id": config.SessionId}, &responseBody)
 	if err != nil {
 		return infer.DeleteResponse{}, err
 	}

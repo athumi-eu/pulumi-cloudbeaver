@@ -7,53 +7,7 @@ import (
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
-func (c *realClient) CreateProjectMember(projectId string, memberId string) error {
-	body := map[string]interface{}{
-		"operationName": "addProjectsPermissions",
-		"query":         "mutation addProjectsPermissions($projectIds: [ID!]!, $subjectIds: [ID!]!, $permissions: [String!]!) {\n rmAddProjectsPermissions(\n projectIds: $projectIds\n subjectIds: $subjectIds\n permissions: $permissions\n )\n}",
-		"variables": map[string]interface{}{
-			// What are these exactly ?
-			"permissions": [2]string{
-				"project-datasource-view",
-				"project-resource-view",
-			},
-			"projectIds": [1]string{
-				projectId,
-			},
-			"subjectIds": [1]string{
-				memberId,
-			},
-		},
-	}
-	var responseBody interface{}
-	_, err := sendPost(fmt.Sprintf("%s/api/gql", c.endpoint), body, map[string]string{"cb-session-id": c.sessionId}, &responseBody)
-	return err
-}
-
-func (c *realClient) DeleteProjectMember(projectId string, memberId string) error {
-	body := map[string]interface{}{
-		"operationName": "deleteProjectsPermissions",
-		"query":         "mutation deleteProjectsPermissions($projectIds: [ID!]!, $subjectIds: [ID!]!, $permissions: [String!]!) {\n rmDeleteProjectsPermissions(\n projectIds: $projectIds\n subjectIds: $subjectIds\n permissions: $permissions\n )\n}",
-		"variables": map[string]interface{}{
-			"permissions": [2]string{
-				"project-datasource-view",
-				"project-resource-view",
-			},
-			"projectIds": [1]string{
-				projectId,
-			},
-			"subjectIds": [1]string{
-				memberId,
-			},
-		},
-	}
-	var responseBody interface{}
-	_, err := sendPost(fmt.Sprintf("%s/api/gql", c.endpoint), body, map[string]string{"cb-session-id": c.sessionId}, &responseBody)
-	return err
-}
-
 type ProjectMember struct {
-	getClient clientFactory
 }
 
 type ProjectMemberArgs struct {
@@ -65,18 +19,29 @@ type ProjectMemberState struct {
 }
 
 func (w *ProjectMember) Create(ctx context.Context, req infer.CreateRequest[ProjectMemberArgs]) (infer.CreateResponse[ProjectMemberState], error) {
-	config := infer.GetConfig[Config](ctx)
-
 	state := ProjectMemberState{ProjectMemberArgs: req.Inputs}
 
-	// Use the client factory to create a client based on the current config.
-	client, err := w.getClient(ctx, config)
-	if err != nil {
-		return infer.CreateResponse[ProjectMemberState]{}, err
-	}
+	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
-	// Use the client to create a project.
-	err = client.CreateProjectMember(req.Inputs.ProjectId, req.Inputs.MemberId)
+	body := map[string]interface{}{
+		"operationName": "rmAddProjectsPermissions",
+		"query":         "mutation rmAddProjectsPermissions($projectIds: [ID!]!, $subjectIds: [ID!]!, $permissions: [String!]!) { rmAddProjectsPermissions(projectIds: $projectIds, subjectIds: $subjectIds, permissions: $permissions) }",
+		"variables": map[string]interface{}{
+			// What are these exactly ?
+			"permissions": [2]string{
+				"project-datasource-view",
+				"project-resource-view",
+			},
+			"projectIds": [1]string{
+				req.Inputs.ProjectId,
+			},
+			"subjectIds": [1]string{
+				req.Inputs.MemberId,
+			},
+		},
+	}
+	var responseBody interface{}
+	_, err := sendPost(fmt.Sprintf("%s/api/gql", config.Endpoint), body, map[string]string{"cb-session-id": config.SessionId}, &responseBody)
 	if err != nil {
 		return infer.CreateResponse[ProjectMemberState]{}, err
 	}
@@ -109,16 +74,26 @@ func (w *ProjectMember) Create(ctx context.Context, req infer.CreateRequest[Proj
 // }
 
 func (w *ProjectMember) Delete(ctx context.Context, req infer.DeleteRequest[ProjectMemberState]) (infer.DeleteResponse, error) {
-	config := infer.GetConfig[Config](ctx)
+	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
-	// Use the client factory to create a client based on the current config.
-	client, err := w.getClient(ctx, config)
-	if err != nil {
-		return infer.DeleteResponse{}, err
+	body := map[string]interface{}{
+		"operationName": "rmDeleteProjectsPermissions",
+		"query":         "mutation rmDeleteProjectsPermissions($projectIds: [ID!]!, $subjectIds: [ID!]!, $permissions: [String!]!) { rmDeleteProjectsPermissions(projectIds: $projectIds, subjectIds: $subjectIds, permissions: $permissions) }",
+		"variables": map[string]interface{}{
+			"permissions": [2]string{
+				"project-datasource-view",
+				"project-resource-view",
+			},
+			"projectIds": [1]string{
+				req.State.ProjectId,
+			},
+			"subjectIds": [1]string{
+				req.State.MemberId,
+			},
+		},
 	}
-
-	// Use the client to delete a project.
-	err = client.DeleteProjectMember(req.State.ProjectId, req.State.MemberId)
+	var responseBody interface{}
+	_, err := sendPost(fmt.Sprintf("%s/api/gql", config.Endpoint), body, map[string]string{"cb-session-id": config.SessionId}, &responseBody)
 	if err != nil {
 		return infer.DeleteResponse{}, err
 	}

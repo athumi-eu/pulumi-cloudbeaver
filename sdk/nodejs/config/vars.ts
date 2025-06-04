@@ -8,34 +8,23 @@ declare var exports: any;
 const __config = new pulumi.Config("cloudbeaver");
 
 /**
+ * The cloudbeaver API key to use.
+ */
+export declare const apiKey: string | undefined;
+Object.defineProperty(exports, "apiKey", {
+    get() {
+        return __config.get("apiKey");
+    },
+    enumerable: true,
+});
+
+/**
  * The cloudbeaver endpoint to connect to.
  */
 export declare const endpoint: string | undefined;
 Object.defineProperty(exports, "endpoint", {
     get() {
         return __config.get("endpoint");
-    },
-    enumerable: true,
-});
-
-/**
- * The cloudbeaver password to use.
- */
-export declare const password: string | undefined;
-Object.defineProperty(exports, "password", {
-    get() {
-        return __config.get("password");
-    },
-    enumerable: true,
-});
-
-/**
- * The cloudbeaver username to use.
- */
-export declare const username: string | undefined;
-Object.defineProperty(exports, "username", {
-    get() {
-        return __config.get("username");
     },
     enumerable: true,
 });

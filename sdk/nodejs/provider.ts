@@ -20,17 +20,13 @@ export class Provider extends pulumi.ProviderResource {
     }
 
     /**
+     * The cloudbeaver API key to use.
+     */
+    public readonly apiKey!: pulumi.Output<string>;
+    /**
      * The cloudbeaver endpoint to connect to.
      */
     public readonly endpoint!: pulumi.Output<string>;
-    /**
-     * The cloudbeaver password to use.
-     */
-    public readonly password!: pulumi.Output<string>;
-    /**
-     * The cloudbeaver username to use.
-     */
-    public readonly username!: pulumi.Output<string>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.
@@ -43,21 +39,17 @@ export class Provider extends pulumi.ProviderResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         {
+            if ((!args || args.apiKey === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'apiKey'");
+            }
             if ((!args || args.endpoint === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'endpoint'");
             }
-            if ((!args || args.password === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'password'");
-            }
-            if ((!args || args.username === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'username'");
-            }
+            resourceInputs["apiKey"] = args?.apiKey ? pulumi.secret(args.apiKey) : undefined;
             resourceInputs["endpoint"] = args ? args.endpoint : undefined;
-            resourceInputs["password"] = args?.password ? pulumi.secret(args.password) : undefined;
-            resourceInputs["username"] = args ? args.username : undefined;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["password"] };
+        const secretOpts = { additionalSecretOutputs: ["apiKey"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(Provider.__pulumiType, name, resourceInputs, opts);
     }
@@ -68,15 +60,11 @@ export class Provider extends pulumi.ProviderResource {
  */
 export interface ProviderArgs {
     /**
+     * The cloudbeaver API key to use.
+     */
+    apiKey: pulumi.Input<string>;
+    /**
      * The cloudbeaver endpoint to connect to.
      */
     endpoint: pulumi.Input<string>;
-    /**
-     * The cloudbeaver password to use.
-     */
-    password: pulumi.Input<string>;
-    /**
-     * The cloudbeaver username to use.
-     */
-    username: pulumi.Input<string>;
 }

@@ -13,22 +13,16 @@ namespace Pulumi.Cloudbeaver
     public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
+        /// The cloudbeaver API key to use.
+        /// </summary>
+        [Output("apiKey")]
+        public Output<string> ApiKey { get; private set; } = null!;
+
+        /// <summary>
         /// The cloudbeaver endpoint to connect to.
         /// </summary>
         [Output("endpoint")]
         public Output<string> Endpoint { get; private set; } = null!;
-
-        /// <summary>
-        /// The cloudbeaver password to use.
-        /// </summary>
-        [Output("password")]
-        public Output<string> Password { get; private set; } = null!;
-
-        /// <summary>
-        /// The cloudbeaver username to use.
-        /// </summary>
-        [Output("username")]
-        public Output<string> Username { get; private set; } = null!;
 
 
         /// <summary>
@@ -51,7 +45,7 @@ namespace Pulumi.Cloudbeaver
                 PluginDownloadURL = "github://api.github.com/athumi-eu",
                 AdditionalSecretOutputs =
                 {
-                    "password",
+                    "apiKey",
                 },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
@@ -63,33 +57,27 @@ namespace Pulumi.Cloudbeaver
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
+        [Input("apiKey", required: true)]
+        private Input<string>? _apiKey;
+
+        /// <summary>
+        /// The cloudbeaver API key to use.
+        /// </summary>
+        public Input<string>? ApiKey
+        {
+            get => _apiKey;
+            set
+            {
+                var emptySecret = Output.CreateSecret(0);
+                _apiKey = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+            }
+        }
+
         /// <summary>
         /// The cloudbeaver endpoint to connect to.
         /// </summary>
         [Input("endpoint", required: true)]
         public Input<string> Endpoint { get; set; } = null!;
-
-        [Input("password", required: true)]
-        private Input<string>? _password;
-
-        /// <summary>
-        /// The cloudbeaver password to use.
-        /// </summary>
-        public Input<string>? Password
-        {
-            get => _password;
-            set
-            {
-                var emptySecret = Output.CreateSecret(0);
-                _password = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
-            }
-        }
-
-        /// <summary>
-        /// The cloudbeaver username to use.
-        /// </summary>
-        [Input("username", required: true)]
-        public Input<string> Username { get; set; } = null!;
 
         public ProviderArgs()
         {

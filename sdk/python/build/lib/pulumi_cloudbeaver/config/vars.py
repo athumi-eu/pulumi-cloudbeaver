@@ -21,23 +21,16 @@ __config__ = pulumi.Config('cloudbeaver')
 
 class _ExportableConfig(types.ModuleType):
     @property
+    def api_key(self) -> Optional[str]:
+        """
+        The cloudbeaver API key to use.
+        """
+        return __config__.get('apiKey')
+
+    @property
     def endpoint(self) -> Optional[str]:
         """
         The cloudbeaver endpoint to connect to.
         """
         return __config__.get('endpoint')
-
-    @property
-    def password(self) -> Optional[str]:
-        """
-        The cloudbeaver password to use.
-        """
-        return __config__.get('password')
-
-    @property
-    def username(self) -> Optional[str]:
-        """
-        The cloudbeaver username to use.
-        """
-        return __config__.get('username')
 
