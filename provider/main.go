@@ -9,6 +9,8 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 )
 
+var version string = "0.1.0"
+
 func main() {
 	p, err := infer.NewProviderBuilder().
 		WithDisplayName("Cloudbeaver").
@@ -33,7 +35,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = p.Run(context.Background(), "cloudbeaver", "0.1.0")
+	err = p.Run(context.Background(), "cloudbeaver", version)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s", err.Error())
