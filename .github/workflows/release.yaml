@@ -42,13 +42,13 @@ jobs:
         run: |
           mkdir -p dist
           EXT=""
-          if [ "${{ matrix.os }}" = "windows" ]; then EXT=".exe"; fi
+          if [ "${{ matrix.goos }}" = "windows" ]; then EXT=".exe"; fi
 
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -C provider -o ../dist/pulumi-resource-${PROVIDER_NAME}${EXT}
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -C provider -o ../dist/pulumi-resource-${PROVIDER_NAME}${EXT}
 
       - name: Package binary
         run: |
-          FILENAME="pulumi-resource-${PROVIDER_NAME}-v${VERSION}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz"
+          FILENAME="pulumi-resource-${PROVIDER_NAME}-v${VERSION}-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz"
           cd dist
           tar -czf $FILENAME pulumi-resource-${PROVIDER_NAME}*
           echo "ASSET=$FILENAME" >> $GITHUB_ENV
