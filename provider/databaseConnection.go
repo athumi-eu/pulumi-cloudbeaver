@@ -13,7 +13,7 @@ type CreateDatabaseConnectionResponseDataConnection struct {
 }
 
 type CreateDatabaseConnectionResponseData struct {
-	Connection CreateDatabaseConnectionResponseDataConnection `json:"connection"`
+	CreateConnection CreateDatabaseConnectionResponseDataConnection `json:"createConnection"`
 }
 
 type CreateDatabaseConnectionResponse struct {
@@ -70,7 +70,7 @@ func (w *DatabaseConnection) Create(ctx context.Context, req infer.CreateRequest
 	}
 
 	return infer.CreateResponse[DatabaseConnectionState]{
-		ID:     responseBody.Data.Connection.ID,
+		ID:     responseBody.Data.CreateConnection.ID,
 		Output: state,
 	}, nil
 }
