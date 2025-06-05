@@ -20,9 +20,17 @@ type DatabaseConnectionSecretState struct {
 }
 
 func (w *DatabaseConnectionSecret) Create(ctx context.Context, req infer.CreateRequest[DatabaseConnectionSecretArgs]) (infer.CreateResponse[DatabaseConnectionSecretState], error) {
+	id := fmt.Sprintf("%s::%s::%s", req.Inputs.DatabaseConnectionId, req.Inputs.ProjectId, req.Inputs.TeamId)
 	state := DatabaseConnectionSecretState{DatabaseConnectionSecretArgs: req.Inputs}
 
 	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
+
+	if req.DryRun {
+		return infer.CreateResponse[DatabaseConnectionSecretState]{
+			ID:     id,
+			Output: state,
+		}, nil
+	}
 
 	body := map[string]interface{}{
 		"operationName": "secretSetToTeam",
@@ -43,7 +51,7 @@ func (w *DatabaseConnectionSecret) Create(ctx context.Context, req infer.CreateR
 	}
 
 	return infer.CreateResponse[DatabaseConnectionSecretState]{
-		ID:     fmt.Sprintf("%s::%s::%s", req.Inputs.DatabaseConnectionId, req.Inputs.ProjectId, req.Inputs.TeamId),
+		ID:     id,
 		Output: state,
 	}, nil
 }

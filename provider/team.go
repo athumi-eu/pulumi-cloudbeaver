@@ -12,7 +12,7 @@ type Team struct {
 
 type TeamArgs struct {
 	Name         string  `pulumi:"name"`
-	Description  string  `pulumi:"description"`
+	Description  string  `pulumi:"description,optional"`
 	EntraGroupId *string `pulumi:"entra_group_id,optional"`
 }
 type TeamState struct {
@@ -24,6 +24,13 @@ func (w *Team) Create(ctx context.Context, req infer.CreateRequest[TeamArgs]) (i
 	state := TeamState{TeamArgs: req.Inputs}
 
 	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
+
+	if req.DryRun {
+		return infer.CreateResponse[TeamState]{
+			ID:     id,
+			Output: state,
+		}, nil
+	}
 
 	body := map[string]interface{}{
 		"operationName": "createTeam",
@@ -37,7 +44,10 @@ func (w *Team) Create(ctx context.Context, req infer.CreateRequest[TeamArgs]) (i
 	var responseBody interface{}
 	_, err := sendPost(fmt.Sprintf("%s/api/gql", config.Endpoint), body, map[string]string{"cb-session-id": config.SessionId}, &responseBody)
 	if err != nil {
-		return infer.CreateResponse[TeamState]{}, err
+		return infer.CreateResponse[TeamState]{
+			ID:     id,
+			Output: state,
+		}, err
 	}
 
 	if req.Inputs.EntraGroupId != nil {

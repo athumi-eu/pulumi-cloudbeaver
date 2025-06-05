@@ -31,7 +31,7 @@ export class Team extends pulumi.CustomResource {
         return obj['__pulumiType'] === Team.__pulumiType;
     }
 
-    public readonly description!: pulumi.Output<string>;
+    public readonly description!: pulumi.Output<string | undefined>;
     public readonly entra_group_id!: pulumi.Output<string | undefined>;
     public readonly name!: pulumi.Output<string>;
 
@@ -46,9 +46,6 @@ export class Team extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.description === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'description'");
-            }
             if ((!args || args.name === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'name'");
             }
@@ -69,7 +66,7 @@ export class Team extends pulumi.CustomResource {
  * The set of arguments for constructing a Team resource.
  */
 export interface TeamArgs {
-    description: pulumi.Input<string>;
+    description?: pulumi.Input<string>;
     entra_group_id?: pulumi.Input<string>;
     name: pulumi.Input<string>;
 }

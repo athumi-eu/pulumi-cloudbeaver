@@ -23,8 +23,15 @@ func (w *Project) Create(ctx context.Context, req infer.CreateRequest[ProjectArg
 
 	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
+	if req.DryRun {
+		return infer.CreateResponse[ProjectState]{
+			ID:     id,
+			Output: state,
+		}, nil
+	}
+
 	body := map[string]interface{}{
-		"operationName": "createProject",
+		"operationName": "rmCreateProject",
 		"query":         "mutation rmCreateProject($projectId: ID, $projectName: String!, $description: String) { rmCreateProject(projectId: $projectId, projectName: $projectName, description: $description) { id } }",
 		"variables": map[string]interface{}{
 			"projectId":   id,
@@ -69,7 +76,7 @@ func (w *Project) Delete(ctx context.Context, req infer.DeleteRequest[ProjectSta
 	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
 	body := map[string]interface{}{
-		"operationName": "deleteProject",
+		"operationName": "rmDeleteProject",
 		"query":         "mutation rmDeleteProject($projectId: ID!) { rmDeleteProject(projectId: $projectId) }",
 		"variables": map[string]interface{}{
 			"projectId": req.ID,

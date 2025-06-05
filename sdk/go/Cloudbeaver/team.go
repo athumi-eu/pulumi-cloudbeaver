@@ -15,7 +15,7 @@ import (
 type Team struct {
 	pulumi.CustomResourceState
 
-	Description    pulumi.StringOutput    `pulumi:"description"`
+	Description    pulumi.StringPtrOutput `pulumi:"description"`
 	Entra_group_id pulumi.StringPtrOutput `pulumi:"entra_group_id"`
 	Name           pulumi.StringOutput    `pulumi:"name"`
 }
@@ -27,9 +27,6 @@ func NewTeam(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
-	if args.Description == nil {
-		return nil, errors.New("invalid value for required argument 'Description'")
-	}
 	if args.Name == nil {
 		return nil, errors.New("invalid value for required argument 'Name'")
 	}
@@ -66,14 +63,14 @@ func (TeamState) ElementType() reflect.Type {
 }
 
 type teamArgs struct {
-	Description    string  `pulumi:"description"`
+	Description    *string `pulumi:"description"`
 	Entra_group_id *string `pulumi:"entra_group_id"`
 	Name           string  `pulumi:"name"`
 }
 
 // The set of arguments for constructing a Team resource.
 type TeamArgs struct {
-	Description    pulumi.StringInput
+	Description    pulumi.StringPtrInput
 	Entra_group_id pulumi.StringPtrInput
 	Name           pulumi.StringInput
 }
@@ -165,8 +162,8 @@ func (o TeamOutput) ToTeamOutputWithContext(ctx context.Context) TeamOutput {
 	return o
 }
 
-func (o TeamOutput) Description() pulumi.StringOutput {
-	return o.ApplyT(func(v *Team) pulumi.StringOutput { return v.Description }).(pulumi.StringOutput)
+func (o TeamOutput) Description() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Team) pulumi.StringPtrOutput { return v.Description }).(pulumi.StringPtrOutput)
 }
 
 func (o TeamOutput) Entra_group_id() pulumi.StringPtrOutput {

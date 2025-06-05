@@ -39,6 +39,13 @@ func (w *DatabaseConnection) Create(ctx context.Context, req infer.CreateRequest
 
 	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
 
+	if req.DryRun {
+		return infer.CreateResponse[DatabaseConnectionState]{
+			ID:     "",
+			Output: state,
+		}, nil
+	}
+
 	body := map[string]interface{}{
 		"operationName": "createConnection",
 		"query":         "mutation createConnection($projectId: ID!, $config: ConnectionConfig!) { createConnection(projectId: $projectId, config: $config) { id } }",

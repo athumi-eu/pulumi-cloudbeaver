@@ -16,11 +16,11 @@ public final class TeamArgs extends com.pulumi.resources.ResourceArgs {
 
     public static final TeamArgs Empty = new TeamArgs();
 
-    @Import(name="description", required=true)
-    private Output<String> description;
+    @Import(name="description")
+    private @Nullable Output<String> description;
 
-    public Output<String> description() {
-        return this.description;
+    public Optional<Output<String>> description() {
+        return Optional.ofNullable(this.description);
     }
 
     @Import(name="entra_group_id")
@@ -63,7 +63,7 @@ public final class TeamArgs extends com.pulumi.resources.ResourceArgs {
             $ = new TeamArgs(Objects.requireNonNull(defaults));
         }
 
-        public Builder description(Output<String> description) {
+        public Builder description(@Nullable Output<String> description) {
             $.description = description;
             return this;
         }
@@ -91,9 +91,6 @@ public final class TeamArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         public TeamArgs build() {
-            if ($.description == null) {
-                throw new MissingRequiredPropertyException("TeamArgs", "description");
-            }
             if ($.name == null) {
                 throw new MissingRequiredPropertyException("TeamArgs", "name");
             }

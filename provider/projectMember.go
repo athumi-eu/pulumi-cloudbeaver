@@ -19,9 +19,17 @@ type ProjectMemberState struct {
 }
 
 func (w *ProjectMember) Create(ctx context.Context, req infer.CreateRequest[ProjectMemberArgs]) (infer.CreateResponse[ProjectMemberState], error) {
+	id := fmt.Sprintf("%s::%s", req.Inputs.ProjectId, req.Inputs.MemberId)
 	state := ProjectMemberState{ProjectMemberArgs: req.Inputs}
 
 	config := infer.GetConfig[CloudbeaverProviderConfig](ctx)
+
+	if req.DryRun {
+		return infer.CreateResponse[ProjectMemberState]{
+			ID:     id,
+			Output: state,
+		}, nil
+	}
 
 	body := map[string]interface{}{
 		"operationName": "rmAddProjectsPermissions",
@@ -47,7 +55,7 @@ func (w *ProjectMember) Create(ctx context.Context, req infer.CreateRequest[Proj
 	}
 
 	return infer.CreateResponse[ProjectMemberState]{
-		ID:     fmt.Sprintf("%s::%s", req.Inputs.ProjectId, req.Inputs.MemberId),
+		ID:     id,
 		Output: state,
 	}, nil
 }

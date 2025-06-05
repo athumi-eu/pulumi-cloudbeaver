@@ -9,7 +9,7 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 )
 
-var version string = "0.1.0"
+var version string = "0.2.0"
 
 func main() {
 	p, err := infer.NewProviderBuilder().

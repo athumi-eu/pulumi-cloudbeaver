@@ -16,10 +16,10 @@ import javax.annotation.Nullable;
 @ResourceType(type="cloudbeaver:index:Team")
 public class Team extends com.pulumi.resources.CustomResource {
     @Export(name="description", refs={String.class}, tree="[0]")
-    private Output<String> description;
+    private Output</* @Nullable */ String> description;
 
-    public Output<String> description() {
-        return this.description;
+    public Output<Optional<String>> description() {
+        return Codegen.optional(this.description);
     }
     @Export(name="entra_group_id", refs={String.class}, tree="[0]")
     private Output</* @Nullable */ String> entra_group_id;

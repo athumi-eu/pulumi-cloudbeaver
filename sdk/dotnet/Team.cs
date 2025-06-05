@@ -13,7 +13,7 @@ namespace Pulumi.Cloudbeaver
     public partial class Team : global::Pulumi.CustomResource
     {
         [Output("description")]
-        public Output<string> Description { get; private set; } = null!;
+        public Output<string?> Description { get; private set; } = null!;
 
         [Output("entra_group_id")]
         public Output<string?> Entra_group_id { get; private set; } = null!;
@@ -67,8 +67,8 @@ namespace Pulumi.Cloudbeaver
 
     public sealed class TeamArgs : global::Pulumi.ResourceArgs
     {
-        [Input("description", required: true)]
-        public Input<string> Description { get; set; } = null!;
+        [Input("description")]
+        public Input<string>? Description { get; set; }
 
         [Input("entra_group_id")]
         public Input<string>? Entra_group_id { get; set; }
