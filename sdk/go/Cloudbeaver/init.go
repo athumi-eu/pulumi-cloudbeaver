@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/blang/semver"
-	"github.com/cloudbeaver/Cloudbeaver/sdk/go/Cloudbeaver/internal"
+	"github.com/pulumi/Cloudbeaver/sdk/go/Cloudbeaver/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 

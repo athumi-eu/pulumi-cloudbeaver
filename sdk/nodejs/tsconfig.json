@@ -17,6 +17,7 @@
         "config/vars.ts",
         "databaseConnection.ts",
         "databaseConnectionSecret.ts",
+        "enableUser.ts",
         "index.ts",
         "project.ts",
         "projectMember.ts",

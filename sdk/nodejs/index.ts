@@ -15,6 +15,11 @@ export type DatabaseConnectionSecret = import("./databaseConnectionSecret").Data
 export const DatabaseConnectionSecret: typeof import("./databaseConnectionSecret").DatabaseConnectionSecret = null as any;
 utilities.lazyLoad(exports, ["DatabaseConnectionSecret"], () => require("./databaseConnectionSecret"));
 
+export { EnableUserArgs, EnableUserResult, EnableUserOutputArgs } from "./enableUser";
+export const enableUser: typeof import("./enableUser").enableUser = null as any;
+export const enableUserOutput: typeof import("./enableUser").enableUserOutput = null as any;
+utilities.lazyLoad(exports, ["enableUser","enableUserOutput"], () => require("./enableUser"));
+
 export { ProjectArgs } from "./project";
 export type Project = import("./project").Project;
 export const Project: typeof import("./project").Project = null as any;

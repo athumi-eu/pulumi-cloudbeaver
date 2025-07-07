@@ -4,7 +4,7 @@
 package config
 
 import (
-	"github.com/cloudbeaver/Cloudbeaver/sdk/go/Cloudbeaver/internal"
+	"github.com/pulumi/Cloudbeaver/sdk/go/Cloudbeaver/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )

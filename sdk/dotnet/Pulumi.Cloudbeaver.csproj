@@ -9,7 +9,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <PackageIcon>logo.png</PackageIcon>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
 
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pulumi" Version="[3.71.1.0,4)" />
+    <PackageReference Include="Pulumi" Version="[3.76.1.0,4)" />
   </ItemGroup>
 
   <ItemGroup>

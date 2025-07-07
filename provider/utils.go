@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+type Empty struct{}
+
 func sendPost(endpoint string, body map[string]interface{}, cookies map[string]string, bodyDest interface{}) (*http.Response, error) {
 	bodyBytes, err := json.Marshal(body)
 	if err != nil {
