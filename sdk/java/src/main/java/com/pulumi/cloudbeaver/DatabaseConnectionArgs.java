@@ -5,20 +5,37 @@ package com.pulumi.cloudbeaver;
 
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
+import com.pulumi.core.internal.Codegen;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
 import java.lang.String;
 import java.util.Objects;
+import java.util.Optional;
+import javax.annotation.Nullable;
 
 
 public final class DatabaseConnectionArgs extends com.pulumi.resources.ResourceArgs {
 
     public static final DatabaseConnectionArgs Empty = new DatabaseConnectionArgs();
 
+    @Import(name="auth_model_id")
+    private @Nullable Output<String> auth_model_id;
+
+    public Optional<Output<String>> auth_model_id() {
+        return Optional.ofNullable(this.auth_model_id);
+    }
+
     @Import(name="database", required=true)
     private Output<String> database;
 
     public Output<String> database() {
         return this.database;
+    }
+
+    @Import(name="driver_id")
+    private @Nullable Output<String> driver_id;
+
+    public Optional<Output<String>> driver_id() {
+        return Optional.ofNullable(this.driver_id);
     }
 
     @Import(name="endpoint", required=true)
@@ -35,6 +52,13 @@ public final class DatabaseConnectionArgs extends com.pulumi.resources.ResourceA
         return this.name;
     }
 
+    @Import(name="port")
+    private @Nullable Output<String> port;
+
+    public Optional<Output<String>> port() {
+        return Optional.ofNullable(this.port);
+    }
+
     @Import(name="project_id", required=true)
     private Output<String> project_id;
 
@@ -45,9 +69,12 @@ public final class DatabaseConnectionArgs extends com.pulumi.resources.ResourceA
     private DatabaseConnectionArgs() {}
 
     private DatabaseConnectionArgs(DatabaseConnectionArgs $) {
+        this.auth_model_id = $.auth_model_id;
         this.database = $.database;
+        this.driver_id = $.driver_id;
         this.endpoint = $.endpoint;
         this.name = $.name;
+        this.port = $.port;
         this.project_id = $.project_id;
     }
 
@@ -69,6 +96,15 @@ public final class DatabaseConnectionArgs extends com.pulumi.resources.ResourceA
             $ = new DatabaseConnectionArgs(Objects.requireNonNull(defaults));
         }
 
+        public Builder auth_model_id(@Nullable Output<String> auth_model_id) {
+            $.auth_model_id = auth_model_id;
+            return this;
+        }
+
+        public Builder auth_model_id(String auth_model_id) {
+            return auth_model_id(Output.of(auth_model_id));
+        }
+
         public Builder database(Output<String> database) {
             $.database = database;
             return this;
@@ -76,6 +112,15 @@ public final class DatabaseConnectionArgs extends com.pulumi.resources.ResourceA
 
         public Builder database(String database) {
             return database(Output.of(database));
+        }
+
+        public Builder driver_id(@Nullable Output<String> driver_id) {
+            $.driver_id = driver_id;
+            return this;
+        }
+
+        public Builder driver_id(String driver_id) {
+            return driver_id(Output.of(driver_id));
         }
 
         public Builder endpoint(Output<String> endpoint) {
@@ -96,6 +141,15 @@ public final class DatabaseConnectionArgs extends com.pulumi.resources.ResourceA
             return name(Output.of(name));
         }
 
+        public Builder port(@Nullable Output<String> port) {
+            $.port = port;
+            return this;
+        }
+
+        public Builder port(String port) {
+            return port(Output.of(port));
+        }
+
         public Builder project_id(Output<String> project_id) {
             $.project_id = project_id;
             return this;
@@ -106,15 +160,18 @@ public final class DatabaseConnectionArgs extends com.pulumi.resources.ResourceA
         }
 
         public DatabaseConnectionArgs build() {
+            $.auth_model_id = Codegen.stringProp("auth_model_id").output().arg($.auth_model_id).def("azure_ad_postgresql").getNullable();
             if ($.database == null) {
                 throw new MissingRequiredPropertyException("DatabaseConnectionArgs", "database");
             }
+            $.driver_id = Codegen.stringProp("driver_id").output().arg($.driver_id).def("postgresql:postgres-jdb").getNullable();
             if ($.endpoint == null) {
                 throw new MissingRequiredPropertyException("DatabaseConnectionArgs", "endpoint");
             }
             if ($.name == null) {
                 throw new MissingRequiredPropertyException("DatabaseConnectionArgs", "name");
             }
+            $.port = Codegen.stringProp("port").output().arg($.port).def("5432").getNullable();
             if ($.project_id == null) {
                 throw new MissingRequiredPropertyException("DatabaseConnectionArgs", "project_id");
             }

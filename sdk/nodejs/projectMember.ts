@@ -31,8 +31,8 @@ export class ProjectMember extends pulumi.CustomResource {
         return obj['__pulumiType'] === ProjectMember.__pulumiType;
     }
 
-    public readonly member_id!: pulumi.Output<string>;
-    public readonly project_id!: pulumi.Output<string>;
+    declare public readonly member_id: pulumi.Output<string>;
+    declare public readonly project_id: pulumi.Output<string>;
 
     /**
      * Create a ProjectMember resource with the given unique name, arguments, and options.
@@ -45,14 +45,14 @@ export class ProjectMember extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.member_id === undefined) && !opts.urn) {
+            if (args?.member_id === undefined && !opts.urn) {
                 throw new Error("Missing required property 'member_id'");
             }
-            if ((!args || args.project_id === undefined) && !opts.urn) {
+            if (args?.project_id === undefined && !opts.urn) {
                 throw new Error("Missing required property 'project_id'");
             }
-            resourceInputs["member_id"] = args ? args.member_id : undefined;
-            resourceInputs["project_id"] = args ? args.project_id : undefined;
+            resourceInputs["member_id"] = args?.member_id;
+            resourceInputs["project_id"] = args?.project_id;
         } else {
             resourceInputs["member_id"] = undefined /*out*/;
             resourceInputs["project_id"] = undefined /*out*/;

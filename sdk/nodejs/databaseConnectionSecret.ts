@@ -31,10 +31,10 @@ export class DatabaseConnectionSecret extends pulumi.CustomResource {
         return obj['__pulumiType'] === DatabaseConnectionSecret.__pulumiType;
     }
 
-    public readonly database_connection_id!: pulumi.Output<string>;
-    public readonly entra_group_name!: pulumi.Output<string>;
-    public readonly project_id!: pulumi.Output<string>;
-    public readonly team_id!: pulumi.Output<string>;
+    declare public readonly database_connection_id: pulumi.Output<string>;
+    declare public readonly entra_group_name: pulumi.Output<string>;
+    declare public readonly project_id: pulumi.Output<string>;
+    declare public readonly team_id: pulumi.Output<string>;
 
     /**
      * Create a DatabaseConnectionSecret resource with the given unique name, arguments, and options.
@@ -47,22 +47,22 @@ export class DatabaseConnectionSecret extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.database_connection_id === undefined) && !opts.urn) {
+            if (args?.database_connection_id === undefined && !opts.urn) {
                 throw new Error("Missing required property 'database_connection_id'");
             }
-            if ((!args || args.entra_group_name === undefined) && !opts.urn) {
+            if (args?.entra_group_name === undefined && !opts.urn) {
                 throw new Error("Missing required property 'entra_group_name'");
             }
-            if ((!args || args.project_id === undefined) && !opts.urn) {
+            if (args?.project_id === undefined && !opts.urn) {
                 throw new Error("Missing required property 'project_id'");
             }
-            if ((!args || args.team_id === undefined) && !opts.urn) {
+            if (args?.team_id === undefined && !opts.urn) {
                 throw new Error("Missing required property 'team_id'");
             }
-            resourceInputs["database_connection_id"] = args ? args.database_connection_id : undefined;
-            resourceInputs["entra_group_name"] = args ? args.entra_group_name : undefined;
-            resourceInputs["project_id"] = args ? args.project_id : undefined;
-            resourceInputs["team_id"] = args ? args.team_id : undefined;
+            resourceInputs["database_connection_id"] = args?.database_connection_id;
+            resourceInputs["entra_group_name"] = args?.entra_group_name;
+            resourceInputs["project_id"] = args?.project_id;
+            resourceInputs["team_id"] = args?.team_id;
         } else {
             resourceInputs["database_connection_id"] = undefined /*out*/;
             resourceInputs["entra_group_name"] = undefined /*out*/;
