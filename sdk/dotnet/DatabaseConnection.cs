@@ -12,14 +12,23 @@ namespace Pulumi.Cloudbeaver
     [CloudbeaverResourceType("cloudbeaver:index:DatabaseConnection")]
     public partial class DatabaseConnection : global::Pulumi.CustomResource
     {
+        [Output("auth_model_id")]
+        public Output<string?> Auth_model_id { get; private set; } = null!;
+
         [Output("database")]
         public Output<string> Database { get; private set; } = null!;
+
+        [Output("driver_id")]
+        public Output<string?> Driver_id { get; private set; } = null!;
 
         [Output("endpoint")]
         public Output<string> Endpoint { get; private set; } = null!;
 
         [Output("name")]
         public Output<string> Name { get; private set; } = null!;
+
+        [Output("port")]
+        public Output<string?> Port { get; private set; } = null!;
 
         [Output("project_id")]
         public Output<string> Project_id { get; private set; } = null!;
@@ -70,8 +79,14 @@ namespace Pulumi.Cloudbeaver
 
     public sealed class DatabaseConnectionArgs : global::Pulumi.ResourceArgs
     {
+        [Input("auth_model_id")]
+        public Input<string>? Auth_model_id { get; set; }
+
         [Input("database", required: true)]
         public Input<string> Database { get; set; } = null!;
+
+        [Input("driver_id")]
+        public Input<string>? Driver_id { get; set; }
 
         [Input("endpoint", required: true)]
         public Input<string> Endpoint { get; set; } = null!;
@@ -79,11 +94,17 @@ namespace Pulumi.Cloudbeaver
         [Input("name", required: true)]
         public Input<string> Name { get; set; } = null!;
 
+        [Input("port")]
+        public Input<string>? Port { get; set; }
+
         [Input("project_id", required: true)]
         public Input<string> Project_id { get; set; } = null!;
 
         public DatabaseConnectionArgs()
         {
+            Auth_model_id = "azure_ad_postgresql";
+            Driver_id = "postgresql:postgres-jdb";
+            Port = "5432";
         }
         public static new DatabaseConnectionArgs Empty => new DatabaseConnectionArgs();
     }

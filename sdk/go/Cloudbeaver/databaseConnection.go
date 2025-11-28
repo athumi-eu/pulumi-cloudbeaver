@@ -15,10 +15,13 @@ import (
 type DatabaseConnection struct {
 	pulumi.CustomResourceState
 
-	Database   pulumi.StringOutput `pulumi:"database"`
-	Endpoint   pulumi.StringOutput `pulumi:"endpoint"`
-	Name       pulumi.StringOutput `pulumi:"name"`
-	Project_id pulumi.StringOutput `pulumi:"project_id"`
+	Auth_model_id pulumi.StringPtrOutput `pulumi:"auth_model_id"`
+	Database      pulumi.StringOutput    `pulumi:"database"`
+	Driver_id     pulumi.StringPtrOutput `pulumi:"driver_id"`
+	Endpoint      pulumi.StringOutput    `pulumi:"endpoint"`
+	Name          pulumi.StringOutput    `pulumi:"name"`
+	Port          pulumi.StringPtrOutput `pulumi:"port"`
+	Project_id    pulumi.StringOutput    `pulumi:"project_id"`
 }
 
 // NewDatabaseConnection registers a new resource with the given unique name, arguments, and options.
@@ -39,6 +42,15 @@ func NewDatabaseConnection(ctx *pulumi.Context,
 	}
 	if args.Project_id == nil {
 		return nil, errors.New("invalid value for required argument 'Project_id'")
+	}
+	if args.Auth_model_id == nil {
+		args.Auth_model_id = pulumi.StringPtr("azure_ad_postgresql")
+	}
+	if args.Driver_id == nil {
+		args.Driver_id = pulumi.StringPtr("postgresql:postgres-jdb")
+	}
+	if args.Port == nil {
+		args.Port = pulumi.StringPtr("5432")
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource DatabaseConnection
@@ -73,18 +85,24 @@ func (DatabaseConnectionState) ElementType() reflect.Type {
 }
 
 type databaseConnectionArgs struct {
-	Database   string `pulumi:"database"`
-	Endpoint   string `pulumi:"endpoint"`
-	Name       string `pulumi:"name"`
-	Project_id string `pulumi:"project_id"`
+	Auth_model_id *string `pulumi:"auth_model_id"`
+	Database      string  `pulumi:"database"`
+	Driver_id     *string `pulumi:"driver_id"`
+	Endpoint      string  `pulumi:"endpoint"`
+	Name          string  `pulumi:"name"`
+	Port          *string `pulumi:"port"`
+	Project_id    string  `pulumi:"project_id"`
 }
 
 // The set of arguments for constructing a DatabaseConnection resource.
 type DatabaseConnectionArgs struct {
-	Database   pulumi.StringInput
-	Endpoint   pulumi.StringInput
-	Name       pulumi.StringInput
-	Project_id pulumi.StringInput
+	Auth_model_id pulumi.StringPtrInput
+	Database      pulumi.StringInput
+	Driver_id     pulumi.StringPtrInput
+	Endpoint      pulumi.StringInput
+	Name          pulumi.StringInput
+	Port          pulumi.StringPtrInput
+	Project_id    pulumi.StringInput
 }
 
 func (DatabaseConnectionArgs) ElementType() reflect.Type {
@@ -174,8 +192,16 @@ func (o DatabaseConnectionOutput) ToDatabaseConnectionOutputWithContext(ctx cont
 	return o
 }
 
+func (o DatabaseConnectionOutput) Auth_model_id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *DatabaseConnection) pulumi.StringPtrOutput { return v.Auth_model_id }).(pulumi.StringPtrOutput)
+}
+
 func (o DatabaseConnectionOutput) Database() pulumi.StringOutput {
 	return o.ApplyT(func(v *DatabaseConnection) pulumi.StringOutput { return v.Database }).(pulumi.StringOutput)
+}
+
+func (o DatabaseConnectionOutput) Driver_id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *DatabaseConnection) pulumi.StringPtrOutput { return v.Driver_id }).(pulumi.StringPtrOutput)
 }
 
 func (o DatabaseConnectionOutput) Endpoint() pulumi.StringOutput {
@@ -184,6 +210,10 @@ func (o DatabaseConnectionOutput) Endpoint() pulumi.StringOutput {
 
 func (o DatabaseConnectionOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *DatabaseConnection) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
+}
+
+func (o DatabaseConnectionOutput) Port() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *DatabaseConnection) pulumi.StringPtrOutput { return v.Port }).(pulumi.StringPtrOutput)
 }
 
 func (o DatabaseConnectionOutput) Project_id() pulumi.StringOutput {

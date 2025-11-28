@@ -1,6 +1,0 @@
-{
-  "resource": true,
-  "name": "cloudbeaver",
-  "version": "0.2.2",
-  "server": "github://api.github.com/athumi-eu"
-}

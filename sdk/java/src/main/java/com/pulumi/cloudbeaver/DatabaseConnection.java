@@ -10,15 +10,28 @@ import com.pulumi.core.annotations.Export;
 import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
 import java.lang.String;
+import java.util.Optional;
 import javax.annotation.Nullable;
 
 @ResourceType(type="cloudbeaver:index:DatabaseConnection")
 public class DatabaseConnection extends com.pulumi.resources.CustomResource {
+    @Export(name="auth_model_id", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> auth_model_id;
+
+    public Output<Optional<String>> auth_model_id() {
+        return Codegen.optional(this.auth_model_id);
+    }
     @Export(name="database", refs={String.class}, tree="[0]")
     private Output<String> database;
 
     public Output<String> database() {
         return this.database;
+    }
+    @Export(name="driver_id", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> driver_id;
+
+    public Output<Optional<String>> driver_id() {
+        return Codegen.optional(this.driver_id);
     }
     @Export(name="endpoint", refs={String.class}, tree="[0]")
     private Output<String> endpoint;
@@ -31,6 +44,12 @@ public class DatabaseConnection extends com.pulumi.resources.CustomResource {
 
     public Output<String> name() {
         return this.name;
+    }
+    @Export(name="port", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> port;
+
+    public Output<Optional<String>> port() {
+        return Codegen.optional(this.port);
     }
     @Export(name="project_id", refs={String.class}, tree="[0]")
     private Output<String> project_id;

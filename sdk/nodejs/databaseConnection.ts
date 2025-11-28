@@ -31,10 +31,13 @@ export class DatabaseConnection extends pulumi.CustomResource {
         return obj['__pulumiType'] === DatabaseConnection.__pulumiType;
     }
 
-    public readonly database!: pulumi.Output<string>;
-    public readonly endpoint!: pulumi.Output<string>;
-    public readonly name!: pulumi.Output<string>;
-    public readonly project_id!: pulumi.Output<string>;
+    declare public readonly auth_model_id: pulumi.Output<string | undefined>;
+    declare public readonly database: pulumi.Output<string>;
+    declare public readonly driver_id: pulumi.Output<string | undefined>;
+    declare public readonly endpoint: pulumi.Output<string>;
+    declare public readonly name: pulumi.Output<string>;
+    declare public readonly port: pulumi.Output<string | undefined>;
+    declare public readonly project_id: pulumi.Output<string>;
 
     /**
      * Create a DatabaseConnection resource with the given unique name, arguments, and options.
@@ -47,26 +50,32 @@ export class DatabaseConnection extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.database === undefined) && !opts.urn) {
+            if (args?.database === undefined && !opts.urn) {
                 throw new Error("Missing required property 'database'");
             }
-            if ((!args || args.endpoint === undefined) && !opts.urn) {
+            if (args?.endpoint === undefined && !opts.urn) {
                 throw new Error("Missing required property 'endpoint'");
             }
-            if ((!args || args.name === undefined) && !opts.urn) {
+            if (args?.name === undefined && !opts.urn) {
                 throw new Error("Missing required property 'name'");
             }
-            if ((!args || args.project_id === undefined) && !opts.urn) {
+            if (args?.project_id === undefined && !opts.urn) {
                 throw new Error("Missing required property 'project_id'");
             }
-            resourceInputs["database"] = args ? args.database : undefined;
-            resourceInputs["endpoint"] = args ? args.endpoint : undefined;
-            resourceInputs["name"] = args ? args.name : undefined;
-            resourceInputs["project_id"] = args ? args.project_id : undefined;
+            resourceInputs["auth_model_id"] = (args?.auth_model_id) ?? "azure_ad_postgresql";
+            resourceInputs["database"] = args?.database;
+            resourceInputs["driver_id"] = (args?.driver_id) ?? "postgresql:postgres-jdb";
+            resourceInputs["endpoint"] = args?.endpoint;
+            resourceInputs["name"] = args?.name;
+            resourceInputs["port"] = (args?.port) ?? "5432";
+            resourceInputs["project_id"] = args?.project_id;
         } else {
+            resourceInputs["auth_model_id"] = undefined /*out*/;
             resourceInputs["database"] = undefined /*out*/;
+            resourceInputs["driver_id"] = undefined /*out*/;
             resourceInputs["endpoint"] = undefined /*out*/;
             resourceInputs["name"] = undefined /*out*/;
+            resourceInputs["port"] = undefined /*out*/;
             resourceInputs["project_id"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -78,8 +87,11 @@ export class DatabaseConnection extends pulumi.CustomResource {
  * The set of arguments for constructing a DatabaseConnection resource.
  */
 export interface DatabaseConnectionArgs {
+    auth_model_id?: pulumi.Input<string>;
     database: pulumi.Input<string>;
+    driver_id?: pulumi.Input<string>;
     endpoint: pulumi.Input<string>;
     name: pulumi.Input<string>;
+    port?: pulumi.Input<string>;
     project_id: pulumi.Input<string>;
 }

@@ -31,9 +31,9 @@ export class Team extends pulumi.CustomResource {
         return obj['__pulumiType'] === Team.__pulumiType;
     }
 
-    public readonly description!: pulumi.Output<string | undefined>;
-    public readonly entra_group_id!: pulumi.Output<string | undefined>;
-    public readonly name!: pulumi.Output<string>;
+    declare public readonly description: pulumi.Output<string | undefined>;
+    declare public readonly entra_group_id: pulumi.Output<string | undefined>;
+    declare public readonly name: pulumi.Output<string>;
 
     /**
      * Create a Team resource with the given unique name, arguments, and options.
@@ -46,12 +46,12 @@ export class Team extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.name === undefined) && !opts.urn) {
+            if (args?.name === undefined && !opts.urn) {
                 throw new Error("Missing required property 'name'");
             }
-            resourceInputs["description"] = args ? args.description : undefined;
-            resourceInputs["entra_group_id"] = args ? args.entra_group_id : undefined;
-            resourceInputs["name"] = args ? args.name : undefined;
+            resourceInputs["description"] = args?.description;
+            resourceInputs["entra_group_id"] = args?.entra_group_id;
+            resourceInputs["name"] = args?.name;
         } else {
             resourceInputs["description"] = undefined /*out*/;
             resourceInputs["entra_group_id"] = undefined /*out*/;
