@@ -24,12 +24,22 @@ type DatabaseConnection struct {
 }
 
 type DatabaseConnectionArgs struct {
-	Name     string `pulumi:"name"`
-	Endpoint string `pulumi:"endpoint"`
-	Database string `pulumi:"database"`
+	Name        string  `pulumi:"name"`
+	Endpoint    string  `pulumi:"endpoint"`
+	Database    string  `pulumi:"database"`
+	DriverId    *string `pulumi:"driver_id,optional"`
+	AuthModelId *string `pulumi:"auth_model_id,optional"`
+	Port        *string `pulumi:"port,optional"`
 
 	ProjectId string `pulumi:"project_id"`
 }
+
+func (a *DatabaseConnectionArgs) Annotate(annotator infer.Annotator) {
+	annotator.SetDefault(&a.DriverId, "postgresql:postgres-jdb")
+	annotator.SetDefault(&a.AuthModelId, "azure_ad_postgresql")
+	annotator.SetDefault(&a.Port, "5432")
+}
+
 type DatabaseConnectionState struct {
 	DatabaseConnectionArgs
 }
@@ -52,13 +62,13 @@ func (w *DatabaseConnection) Create(ctx context.Context, req infer.CreateRequest
 		"variables": map[string]interface{}{
 			"projectId": req.Inputs.ProjectId,
 			"config": map[string]interface{}{
-				"driverId":          "postgresql:postgres-jdbc",
-				"authModelId":       "azure_ad_postgresql",
+				"driverId":          *req.Inputs.DriverId,
+				"authModelId":       *req.Inputs.AuthModelId,
 				"name":              req.Inputs.Name,
 				"configurationType": "MANUAL",
 				"host":              req.Inputs.Endpoint,
 				"databaseName":      req.Inputs.Database,
-				"port":              "5432",
+				"port":              *req.Inputs.Port,
 				"sharedCredentials": true,
 			},
 		},
