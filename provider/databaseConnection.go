@@ -35,7 +35,7 @@ type DatabaseConnectionArgs struct {
 }
 
 func (a *DatabaseConnectionArgs) Annotate(annotator infer.Annotator) {
-	annotator.SetDefault(&a.DriverId, "postgresql:postgres-jdb")
+	annotator.SetDefault(&a.DriverId, "postgresql:postgres-jdbc")
 	annotator.SetDefault(&a.AuthModelId, "azure_ad_postgresql")
 	annotator.SetDefault(&a.Port, "5432")
 }
