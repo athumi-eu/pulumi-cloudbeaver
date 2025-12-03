@@ -64,7 +64,7 @@ export class DatabaseConnection extends pulumi.CustomResource {
             }
             resourceInputs["auth_model_id"] = (args?.auth_model_id) ?? "azure_ad_postgresql";
             resourceInputs["database"] = args?.database;
-            resourceInputs["driver_id"] = (args?.driver_id) ?? "postgresql:postgres-jdb";
+            resourceInputs["driver_id"] = (args?.driver_id) ?? "postgresql:postgres-jdbc";
             resourceInputs["endpoint"] = args?.endpoint;
             resourceInputs["name"] = args?.name;
             resourceInputs["port"] = (args?.port) ?? "5432";
