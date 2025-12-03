@@ -38,7 +38,7 @@ class DatabaseConnectionArgs:
         if auth_model_id is not None:
             pulumi.set(__self__, "auth_model_id", auth_model_id)
         if driver_id is None:
-            driver_id = 'postgresql:postgres-jdb'
+            driver_id = 'postgresql:postgres-jdbc'
         if driver_id is not None:
             pulumi.set(__self__, "driver_id", driver_id)
         if port is None:
@@ -175,7 +175,7 @@ class DatabaseConnection(pulumi.CustomResource):
                 raise TypeError("Missing required property 'database'")
             __props__.__dict__["database"] = database
             if driver_id is None:
-                driver_id = 'postgresql:postgres-jdb'
+                driver_id = 'postgresql:postgres-jdbc'
             __props__.__dict__["driver_id"] = driver_id
             if endpoint is None and not opts.urn:
                 raise TypeError("Missing required property 'endpoint'")

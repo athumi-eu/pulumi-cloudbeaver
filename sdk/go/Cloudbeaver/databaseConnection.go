@@ -47,7 +47,7 @@ func NewDatabaseConnection(ctx *pulumi.Context,
 		args.Auth_model_id = pulumi.StringPtr("azure_ad_postgresql")
 	}
 	if args.Driver_id == nil {
-		args.Driver_id = pulumi.StringPtr("postgresql:postgres-jdb")
+		args.Driver_id = pulumi.StringPtr("postgresql:postgres-jdbc")
 	}
 	if args.Port == nil {
 		args.Port = pulumi.StringPtr("5432")

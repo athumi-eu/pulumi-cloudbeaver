@@ -103,7 +103,7 @@ namespace Pulumi.Cloudbeaver
         public DatabaseConnectionArgs()
         {
             Auth_model_id = "azure_ad_postgresql";
-            Driver_id = "postgresql:postgres-jdb";
+            Driver_id = "postgresql:postgres-jdbc";
             Port = "5432";
         }
         public static new DatabaseConnectionArgs Empty => new DatabaseConnectionArgs();

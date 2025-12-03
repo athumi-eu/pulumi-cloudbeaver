@@ -1,6 +1,6 @@
 {
     "name": "@pulumi/cloudbeaver",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "scripts": {
         "build": "tsc"
     },
@@ -14,7 +14,7 @@
     "pulumi": {
         "resource": true,
         "name": "cloudbeaver",
-        "version": "0.3.0",
+        "version": "0.3.1",
         "server": "github://api.github.com/athumi-eu"
     }
 }

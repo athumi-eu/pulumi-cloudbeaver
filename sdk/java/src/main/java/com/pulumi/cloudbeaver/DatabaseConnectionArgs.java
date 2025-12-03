@@ -164,7 +164,7 @@ public final class DatabaseConnectionArgs extends com.pulumi.resources.ResourceA
             if ($.database == null) {
                 throw new MissingRequiredPropertyException("DatabaseConnectionArgs", "database");
             }
-            $.driver_id = Codegen.stringProp("driver_id").output().arg($.driver_id).def("postgresql:postgres-jdb").getNullable();
+            $.driver_id = Codegen.stringProp("driver_id").output().arg($.driver_id).def("postgresql:postgres-jdbc").getNullable();
             if ($.endpoint == null) {
                 throw new MissingRequiredPropertyException("DatabaseConnectionArgs", "endpoint");
             }
